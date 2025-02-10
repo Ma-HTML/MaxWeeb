@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxWeeb - Moteur de Recherche</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding-top: 50px;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .search-button, .result-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        .search-button:hover, .result-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .result-button {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .results-container {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .result {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .result img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>MaxWeeb</h1>
+        <h2>Rechercher en obtenant tout les moteurs de recherches possibles...</h2>
+        <input type="text" id="search" class="search-box" placeholder="Rechercher...">
+        <button class="search-button" onclick="search()">Rechercher</button>
+    </div>
+    <div class="results-container" id="results"></div>
+    <script>
+        function search() {
+            let query = document.getElementById("search").value;
+            if (!query) return;
+            
+            let searchEngines = [
+                { name: "Google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
+                { name: "Bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/sa/simg/favicon-2x.ico" },
+                { name: "Brave", url: "https://search.brave.com/search?q=", icon: "https://brave.com/static-assets/images/brave-logo-sans-text.svg" },
+                { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=", icon: "https://duckduckgo.com/favicon.ico" },
+                { name: "Yahoo", url: "https://search.yahoo.com/search?p=", icon: "https://freelogopng.com/images/all_img/1681905498yahoo-icon-png.png" },
+                { name: "Ecosia", url: "https://www.ecosia.org/search?q=", icon: "https://www.ecosia.org/favicon.ico" },
+                { name: "Yandex", url: "https://yandex.com/search/?text=", icon: "https://yandex.com/favicon.ico" }
+            ];
+            
+            let resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = "";
+            let startTime = performance.now();
+            
+            searchEngines.forEach(engine => {
+                setTimeout(() => {
+                    let endTime = performance.now();
+                    let elapsedTime = ((endTime - startTime) / 1000).toFixed(2);
+                    
+                    let resultElement = document.createElement("div");
+                    resultElement.classList.add("result");
+                    
+                    resultElement.innerHTML = `
+                        <div>
+                            <img src="${engine.icon}" alt="${engine.name}">
+                            <span>Résultats de <b>${engine.name}</b> en ${elapsedTime} secondes.</span>
+                        </div>
+                        <button class="result-button" onclick="window.open('${engine.url}${encodeURIComponent(query)}', '_blank')">Voir</button>
+                    `;
+                    
+                    resultsContainer.appendChild(resultElement);
+                    setTimeout(() => {
+                        resultElement.classList.add("visible");
+                    }, 100);
+                }, Math.random() * 500 + 500);
+            });
+        }
+    </script>
+</body>
+</html>
